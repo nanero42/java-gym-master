@@ -1,6 +1,14 @@
 package ru.yandex.practicum.gym;
 
-public class TrainingSession {
+import java.util.Objects;
+
+public class TrainingSession implements  Comparable<TrainingSession> {
+    public static final TrainingSession defaultTraningSession = new TrainingSession(
+        new Group("", Age.CHILD, 0),
+        new Coach("", "", ""),
+        DayOfWeek.MONDAY,
+        new TimeOfDay(0, 0)
+    );
 
     //группа
     private Group group;
@@ -32,5 +40,36 @@ public class TrainingSession {
 
     public TimeOfDay getTimeOfDay() {
         return timeOfDay;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TrainingSession that = (TrainingSession) o;
+        return Objects.equals(group, that.group)
+                && Objects.equals(coach, that.coach)
+                && dayOfWeek == that.dayOfWeek
+                && Objects.equals(timeOfDay, that.timeOfDay);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(group, coach, dayOfWeek, timeOfDay);
+    }
+
+    @Override
+    public String toString() {
+        return "TrainingSession{" +
+                "group=" + group +
+                ", coach=" + coach +
+                ", dayOfWeek=" + dayOfWeek +
+                ", timeOfDay=" + timeOfDay +
+                '}';
+    }
+
+    @Override
+    public int compareTo(TrainingSession o) {
+        if (dayOfWeek != o.getDayOfWeek()) return dayOfWeek.compareTo(o.getDayOfWeek());
+        return timeOfDay.compareTo(o.getTimeOfDay());
     }
 }
