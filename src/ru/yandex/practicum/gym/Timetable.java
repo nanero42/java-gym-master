@@ -64,8 +64,8 @@ public class Timetable {
                 Integer count1 = sessionCount.get(o1);
                 Integer count2 = sessionCount.get(o2);
 
-                int comparison = count1.compareTo(count2);
-                if (comparison == 0) return o1.compareTo(o2);
+                int comparison = count2.compareTo(count1);
+                if (comparison == 0) return o2.compareTo(o1);
                 return comparison;
             }
         };

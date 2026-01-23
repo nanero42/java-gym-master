@@ -173,9 +173,16 @@ public class TimetableTest {
 
         TreeMap<Coach, Integer> map = timetable.getCountByCoachestCountByCoaches();
 
-        assertEquals(1, (int) map.get(coach3));
-        assertEquals(3, (int) map.get(coach));
-        assertEquals(2, (int) map.get(coach2));
+        var first = map.firstEntry();
+        assertEquals(3, (int) first.getValue());
+        map.remove(first.getKey());
+
+        var second = map.firstEntry();
+        assertEquals(2, (int) second.getValue());
+        map.remove(second.getKey());
+
+        var third = map.firstEntry();
+        assertEquals(1, (int) third.getValue());
     }
 
 }
