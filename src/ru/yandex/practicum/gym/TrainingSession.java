@@ -3,13 +3,6 @@ package ru.yandex.practicum.gym;
 import java.util.Objects;
 
 public class TrainingSession implements  Comparable<TrainingSession> {
-    public static final TrainingSession defaultTraningSession = new TrainingSession(
-        new Group("", Age.CHILD, 0),
-        new Coach("", "", ""),
-        DayOfWeek.MONDAY,
-        new TimeOfDay(0, 0)
-    );
-
     //группа
     private Group group;
     //тренер

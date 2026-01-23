@@ -3,61 +3,48 @@ package ru.yandex.practicum.gym;
 import java.util.*;
 
 public class Timetable {
-    private final HashMap<DayOfWeek, HashSet<TrainingSession>> sessionsByDay = new HashMap<>() {{
-        put(DayOfWeek.MONDAY, new HashSet<>());
-        put(DayOfWeek.TUESDAY, new HashSet<>());
-        put(DayOfWeek.WEDNESDAY, new HashSet<>());
-        put(DayOfWeek.THURSDAY, new HashSet<>());
-        put(DayOfWeek.FRIDAY, new HashSet<>());
-        put(DayOfWeek.SATURDAY, new HashSet<>());
-        put(DayOfWeek.SUNDAY, new HashSet<>());
+    private final HashMap<DayOfWeek, TreeMap<TimeOfDay, TreeSet<TrainingSession>>> weekAndDayTable = new HashMap<>() {{
+        put(DayOfWeek.MONDAY, new TreeMap<>());
+        put(DayOfWeek.TUESDAY, new TreeMap<>());
+        put(DayOfWeek.WEDNESDAY, new TreeMap<>());
+        put(DayOfWeek.THURSDAY, new TreeMap<>());
+        put(DayOfWeek.FRIDAY, new TreeMap<>());
+        put(DayOfWeek.SATURDAY, new TreeMap<>());
+        put(DayOfWeek.SUNDAY, new TreeMap<>());
     }};
-    private final HashMap<SessionKey, HashSet<TrainingSession>> sessionsByDayAndTime = new HashMap<>();
+    private final TreeMap<DayOfWeek, TreeSet<TrainingSession>> weekTable = new TreeMap<>();
 
-    public void addNewTrainingSession(TrainingSession trainingSession) {
-        sessionsByDay.get(trainingSession.getDayOfWeek()).add(trainingSession);
-
-        SessionKey key = new SessionKey(
-            trainingSession.getDayOfWeek(),
-            trainingSession.getTimeOfDay()
-        );
-        
-        Set<TrainingSession> list = sessionsByDayAndTime.get(key);
+    private void addSessionToWeekAndDayTable(TrainingSession s) {
+        var map = weekAndDayTable.get(s.getDayOfWeek());
+        var list = map.get(s.getTimeOfDay());
+    
         if (list == null) {
-            sessionsByDayAndTime.put(key, new HashSet<>(){{ add(trainingSession); }});
+            map.put(s.getTimeOfDay(), new TreeSet<>(){{ add(s); }});
         } else {
-            list.add(trainingSession);
+            list.add(s);
         }
     }
 
-    // О(1)
-    public Set<TrainingSession> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
-        return sessionsByDay.get(dayOfWeek);
+    private void addSessionToWeekTable(TrainingSession s) {
+        var timeList = weekTable.putIfAbsent(
+            s.getDayOfWeek(),
+            new TreeSet<>(){{ add(s); }}
+        );
+        if (timeList != null) timeList.add(s);
     }
 
-    // О(1)
-    public Set<TrainingSession> getTrainingSessionsForDayAndTime(
-            DayOfWeek dayOfWeek,
-            TimeOfDay timeOfDay
-    ) {
-        return sessionsByDayAndTime.get(
-                new SessionKey(
-                        dayOfWeek,
-                        timeOfDay
-                )
-            );
+    public void addNewTrainingSession(TrainingSession trainingSession) {
+        this.addSessionToWeekAndDayTable(trainingSession);
+        this.addSessionToWeekTable(trainingSession);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Timetable timetable = (Timetable) o;
-        return Objects.equals(sessionsByDay, timetable.sessionsByDay)
-                && Objects.equals(sessionsByDayAndTime, timetable.sessionsByDayAndTime);
+    public TreeSet<TrainingSession> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
+        var set = weekTable.get(dayOfWeek);
+        return set == null ? new TreeSet<>() : set;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(sessionsByDay, sessionsByDayAndTime);
+    public TreeSet<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
+        var set = weekAndDayTable.get(dayOfWeek).get(timeOfDay);
+        return set == null ? new TreeSet<>() : set;
     }
 }

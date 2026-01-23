@@ -104,7 +104,7 @@ public class TimetableTest {
                 DayOfWeek.MONDAY,
                 new TimeOfDay(14, 0)
         );
-        assertNull(session14);
+        assertEquals(0, session14.size());
     }
 
 }
