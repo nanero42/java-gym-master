@@ -18,9 +18,8 @@ public class Timetable {
     private void addSessionToWeekAndDayTable(TrainingSession s) {
         var map = weekAndDayTable.get(s.getDayOfWeek());
         var list = map.get(s.getTimeOfDay());
-    
         if (list == null) {
-            map.put(s.getTimeOfDay(), new TreeSet<>(){{ add(s); }});
+            map.put(s.getTimeOfDay(), new TreeSet<>(){{add(s);}});
         } else {
             list.add(s);
         }
@@ -29,7 +28,7 @@ public class Timetable {
     private void addSessionToWeekTable(TrainingSession s) {
         var timeList = weekTable.putIfAbsent(
             s.getDayOfWeek(),
-            new TreeSet<>(){{ add(s); }}
+            new TreeSet<>(){{add(s);}}
         );
         if (timeList != null) timeList.add(s);
     }
