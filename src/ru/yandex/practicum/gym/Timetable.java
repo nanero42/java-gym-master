@@ -13,6 +13,7 @@ public class Timetable {
         put(DayOfWeek.SUNDAY, new TreeMap<>());
     }};
     private final TreeMap<DayOfWeek, TreeSet<TrainingSession>> weekTable = new TreeMap<>();
+    private final TreeMap<Coach, Integer> sessionCount = new TreeMap<>();
 
     private void addSessionToWeekAndDayTable(TrainingSession s) {
         var map = weekAndDayTable.get(s.getDayOfWeek());
@@ -33,9 +34,17 @@ public class Timetable {
         if (timeList != null) timeList.add(s);
     }
 
+    private void countSessionsByCoach(Coach c) {
+        Integer count = sessionCount.putIfAbsent(c, 1);
+        if (count != null) {
+            sessionCount.put(c, count + 1);
+        }
+    }
+
     public void addNewTrainingSession(TrainingSession trainingSession) {
         this.addSessionToWeekAndDayTable(trainingSession);
         this.addSessionToWeekTable(trainingSession);
+        this.countSessionsByCoach(trainingSession.getCoach());
     }
 
     public TreeSet<TrainingSession> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
@@ -46,5 +55,25 @@ public class Timetable {
     public TreeSet<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
         var set = weekAndDayTable.get(dayOfWeek).get(timeOfDay);
         return set == null ? new TreeSet<>() : set;
+    }
+
+    public TreeMap<Coach, Integer> getCountByCoachestCountByCoaches() {
+        Comparator<Coach> sessionCountComparator = new Comparator<Coach>() {
+            @Override
+            public int compare(Coach o1, Coach o2) {
+                Integer count1 = sessionCount.get(o1);
+                Integer count2 = sessionCount.get(o2);
+
+                int comparison = count1.compareTo(count2);
+                if (comparison == 0) return o1.compareTo(o2);
+                return comparison;
+            }
+        };
+
+        TreeMap<Coach, Integer> sorted = new TreeMap<>(sessionCountComparator);
+
+        sorted.putAll(sessionCount);
+
+        return sorted;
     }
 }
