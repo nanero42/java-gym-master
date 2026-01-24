@@ -3,7 +3,7 @@ package ru.yandex.practicum.gym;
 import java.util.*;
 
 public class Timetable {
-    private final HashMap<DayOfWeek, TreeMap<TimeOfDay, TreeSet<TrainingSession>>> weekAndDayTable = new HashMap<>() {{
+    private final HashMap<DayOfWeek, TreeMap<TimeOfDay, ArrayList<TrainingSession>>> weekAndDayTable = new HashMap<>() {{
         put(DayOfWeek.MONDAY, new TreeMap<>());
         put(DayOfWeek.TUESDAY, new TreeMap<>());
         put(DayOfWeek.WEDNESDAY, new TreeMap<>());
@@ -12,25 +12,16 @@ public class Timetable {
         put(DayOfWeek.SATURDAY, new TreeMap<>());
         put(DayOfWeek.SUNDAY, new TreeMap<>());
     }};
-    private final TreeMap<DayOfWeek, TreeSet<TrainingSession>> weekTable = new TreeMap<>();
     private final TreeMap<Coach, Integer> sessionCount = new TreeMap<>();
 
     private void addSessionToWeekAndDayTable(TrainingSession s) {
         var map = weekAndDayTable.get(s.getDayOfWeek());
         var list = map.get(s.getTimeOfDay());
         if (list == null) {
-            map.put(s.getTimeOfDay(), new TreeSet<>(Set.of(s)));
+            map.put(s.getTimeOfDay(), new ArrayList<>(List.of(s)));
         } else {
             list.add(s);
         }
-    }
-
-    private void addSessionToWeekTable(TrainingSession s) {
-        var timeList = weekTable.putIfAbsent(
-            s.getDayOfWeek(),
-            new TreeSet<>(Set.of(s))
-        );
-        if (timeList != null) timeList.add(s);
     }
 
     private void countSessionsByCoach(Coach c) {
@@ -42,18 +33,24 @@ public class Timetable {
 
     public void addNewTrainingSession(TrainingSession trainingSession) {
         this.addSessionToWeekAndDayTable(trainingSession);
-        this.addSessionToWeekTable(trainingSession);
         this.countSessionsByCoach(trainingSession.getCoach());
     }
 
-    public TreeSet<TrainingSession> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
-        var set = weekTable.get(dayOfWeek);
-        return set == null ? new TreeSet<>() : set;
+    public ArrayList<TrainingSession> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
+        var map = weekAndDayTable.get(dayOfWeek);
+        var keySet = map.navigableKeySet();
+
+        var list = new ArrayList<TrainingSession>();
+        for (var timeOfDay : keySet) {
+            list.addAll(map.get(timeOfDay));
+        }
+
+        return list;
     }
 
-    public TreeSet<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
+    public ArrayList<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
         var set = weekAndDayTable.get(dayOfWeek).get(timeOfDay);
-        return set == null ? new TreeSet<>() : set;
+        return set == null ? new ArrayList<>() : set;
     }
 
     public TreeMap<Coach, Integer> getCountByCoachestCountByCoaches() {
