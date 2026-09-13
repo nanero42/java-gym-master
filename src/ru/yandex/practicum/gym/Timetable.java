@@ -22,7 +22,7 @@ public class Timetable {
             trainingSession.getCoach().increaseTotalSessionsCount();
             return;
         }
-        
+
         List<TrainingSession> sessionList = sessions.get(timeOfDay);
         if (sessionList == null) {
             sessionList = new ArrayList<>(List.of(trainingSession));
@@ -41,7 +41,7 @@ public class Timetable {
                 throw new IllegalArgumentException("Такая сессия уже есть");
             }
         }
-        
+
         sessionList.add(trainingSession);
         trainingSession.getCoach().increaseTotalSessionsCount();
     }
