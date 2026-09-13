@@ -1,15 +1,16 @@
 package ru.yandex.practicum.gym;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class TimeOfDay implements Comparable<TimeOfDay> {
 
-    //часы (от 0 до 23)
+    private final UUID id;
     private int hours;
-    //минуты (от 0 до 59)
     private int minutes;
 
     public TimeOfDay(int hours, int minutes) {
+        this.id = UUID.randomUUID();
         this.hours = hours;
         this.minutes = minutes;
     }
@@ -21,16 +22,21 @@ public class TimeOfDay implements Comparable<TimeOfDay> {
     }
 
     @Override
+    public String toString() {
+        return "TimeOfDay [id=" + id + ", hours=" + hours + ", minutes=" + minutes + "]";
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TimeOfDay timeOfDay = (TimeOfDay) o;
-        return hours == timeOfDay.hours && minutes == timeOfDay.minutes;
+        if (o == this) return true;
+        if (o == null || o.getClass() != getClass()) return false;
+        TimeOfDay t = (TimeOfDay) o;
+        return t.id.equals(id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hours, minutes);
+        return Objects.hash(id);
     }
 
     public int getHours() {
