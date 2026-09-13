@@ -47,15 +47,20 @@ public class Timetable {
     }
 
     public List<TrainingSession> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
-         TreeMap<TimeOfDay, List<TrainingSession>> sessions = timetable.get(dayOfWeek);
-         Collection<List<TrainingSession>> sessionCollection = sessions.values();
-         List<TrainingSession> sessionList = new ArrayList<>();
+        TreeMap<TimeOfDay, List<TrainingSession>> sessions = timetable.get(dayOfWeek);
 
-         for (List<TrainingSession> s : sessionCollection) {
-            sessionList.addAll(s);
-         }
+        if (sessions == null) {
+            return new ArrayList<>();
+        }
 
-         return sessionList;
+        Collection<List<TrainingSession>> sessionCollection = sessions.values();
+        List<TrainingSession> sessionList = new ArrayList<>();
+
+        for (List<TrainingSession> s : sessionCollection) {
+        sessionList.addAll(s);
+        }
+
+        return sessionList;
     }
 
     public List<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
