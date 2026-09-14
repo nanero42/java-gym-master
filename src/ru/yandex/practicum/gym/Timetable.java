@@ -57,7 +57,7 @@ public class Timetable {
         List<TrainingSession> sessionList = new ArrayList<>();
 
         for (List<TrainingSession> s : sessionCollection) {
-        sessionList.addAll(s);
+            sessionList.addAll(s);
         }
 
         return sessionList;

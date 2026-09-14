@@ -1,18 +1,15 @@
 package ru.yandex.practicum.gym;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class Coach {
 
-    private final UUID id;
     private final String surname;
     private final String name;
     private final String middleName;
     private int totalSessionsCount;
 
     public Coach(String surname, String name, String middleName) {
-        this.id = UUID.randomUUID();
         this.surname = surname;
         this.name = name;
         this.middleName = middleName;
@@ -21,7 +18,7 @@ public class Coach {
 
     @Override
     public String toString() {
-        return "Coach [id=" + id + ", surname=" + surname + ", name=" + name + ", middleName=" + middleName
+        return "Coach [surname=" + surname + ", name=" + name + ", middleName=" + middleName
                 + ", totalSessionsCount=" + totalSessionsCount + "]";
     }
 
@@ -30,12 +27,14 @@ public class Coach {
         if (o == this) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coach coach = (Coach) o;
-        return id.equals(coach.id);
+        return Objects.equals(surname, coach.surname)
+            && Objects.equals(name, coach.name)
+            && Objects.equals(middleName, coach.middleName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(surname, name, middleName);
     }
 
     public String getSurname() {
