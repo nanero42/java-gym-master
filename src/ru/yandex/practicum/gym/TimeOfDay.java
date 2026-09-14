@@ -4,9 +4,7 @@ import java.util.Objects;
 
 public class TimeOfDay implements Comparable<TimeOfDay> {
 
-    //часы (от 0 до 23)
     private int hours;
-    //минуты (от 0 до 59)
     private int minutes;
 
     public TimeOfDay(int hours, int minutes) {
@@ -21,11 +19,16 @@ public class TimeOfDay implements Comparable<TimeOfDay> {
     }
 
     @Override
+    public String toString() {
+        return "TimeOfDay [hours=" + hours + ", minutes=" + minutes + "]";
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TimeOfDay timeOfDay = (TimeOfDay) o;
-        return hours == timeOfDay.hours && minutes == timeOfDay.minutes;
+        if (o == this) return true;
+        if (o == null || o.getClass() != getClass()) return false;
+        TimeOfDay t = (TimeOfDay) o;
+        return t.hours == hours && t.minutes == minutes;
     }
 
     @Override

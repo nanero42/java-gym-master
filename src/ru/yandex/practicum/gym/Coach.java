@@ -4,25 +4,32 @@ import java.util.Objects;
 
 public class Coach {
 
-    //фамилия
-    private String surname;
-    //имя
-    private String name;
-    //отчество
-    private String middleName;
+    private final String surname;
+    private final String name;
+    private final String middleName;
+    private int totalSessionsCount;
 
     public Coach(String surname, String name, String middleName) {
         this.surname = surname;
         this.name = name;
         this.middleName = middleName;
+        this.totalSessionsCount = 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Coach [surname=" + surname + ", name=" + name + ", middleName=" + middleName
+                + ", totalSessionsCount=" + totalSessionsCount + "]";
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (o == this) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coach coach = (Coach) o;
-        return Objects.equals(surname, coach.surname) && Objects.equals(name, coach.name) && Objects.equals(middleName, coach.middleName);
+        return Objects.equals(surname, coach.surname)
+            && Objects.equals(name, coach.name)
+            && Objects.equals(middleName, coach.middleName);
     }
 
     @Override
@@ -40,5 +47,13 @@ public class Coach {
 
     public String getMiddleName() {
         return middleName;
+    }
+
+    public int getTotalSessionCount() {
+        return totalSessionsCount;
+    }
+
+    public void increaseTotalSessionsCount() {
+        totalSessionsCount++;
     }
 }
